@@ -1,4 +1,4 @@
-(() => {
+! function() {
     "use strict";
     const e = e => Math.abs(parseInt(e, 10)),
         t = (e, t) => {
@@ -16,36 +16,36 @@
                 ["payment_required", "payment-required"]
             ]);
             a.has(t) && (t = a.get(t)), Array.from(a.values()).includes(t) || (t = `custom-${t=(t=t.replace(/[^0-9a-z]+/i," ").trim()).replace(/\s+/,"-")}`);
-            const r = e.getAttribute("data-status");
-            return e.wpcf7.status = t, e.setAttribute("data-status", t), e.classList.add(t), r && r !== t && e.classList.remove(r), t
+            const n = e.getAttribute("data-status");
+            return e.wpcf7.status = t, e.setAttribute("data-status", t), e.classList.add(t), n && n !== t && e.classList.remove(n), t
         },
         a = (e, t, a) => {
-            const r = new CustomEvent(`wpcf7${t}`, {
+            const n = new CustomEvent(`wpcf7${t}`, {
                 bubbles: !0,
                 detail: a
             });
-            "string" == typeof e && (e = document.querySelector(e)), e.dispatchEvent(r)
+            "string" == typeof e && (e = document.querySelector(e)), e.dispatchEvent(n)
         },
-        r = e => {
+        n = e => {
             const {
                 root: t,
                 namespace: a = "contact-form-7/v1"
             } = wpcf7.api;
-            return n.reduceRight(((e, t) => a => t(a, e)), (e => {
-                let r, n, {
+            return r.reduceRight(((e, t) => a => t(a, e)), (e => {
+                let n, r, {
                     url: o,
                     path: c,
-                    endpoint: i,
-                    headers: s,
+                    endpoint: s,
+                    headers: i,
                     body: l,
                     data: d,
-                    ...u
+                    ...p
                 } = e;
-                "string" == typeof i && (r = a.replace(/^\/|\/$/g, ""), n = i.replace(/^\//, ""), c = n ? r + "/" + n : r), "string" == typeof c && (-1 !== t.indexOf("?") && (c = c.replace("?", "&")), c = c.replace(/^\//, ""), o = t + c), s = {
+                "string" == typeof s && (n = a.replace(/^\/|\/$/g, ""), r = s.replace(/^\//, ""), c = r ? n + "/" + r : n), "string" == typeof c && (-1 !== t.indexOf("?") && (c = c.replace("?", "&")), c = c.replace(/^\//, ""), o = t + c), i = {
                     Accept: "application/json, */*;q=0.1",
-                    ...s
-                }, delete s["X-WP-Nonce"], d && (l = JSON.stringify(d), s["Content-Type"] = "application/json");
-                const p = {
+                    ...i
+                }, delete i["X-WP-Nonce"], d && (l = JSON.stringify(d), i["Content-Type"] = "application/json");
+                const u = {
                         code: "fetch_error",
                         message: "You are probably offline."
                     },
@@ -53,8 +53,8 @@
                         code: "invalid_json",
                         message: "The response is not a valid JSON response."
                     };
-                return window.fetch(o || c || window.location.href, { ...u,
-                    headers: s,
+                return window.fetch(o || c || window.location.href, { ...p,
+                    headers: i,
                     body: l
                 }).then((e => Promise.resolve(e).then((e => {
                     if (e.status >= 200 && e.status < 300) return e;
@@ -66,22 +66,30 @@
                     }));
                     throw f
                 }))), (() => {
-                    throw p
+                    throw u
                 }))
             }))(e)
         },
-        n = [];
+        r = [];
 
     function o(e) {
-        var a, r, n, o;
-        let s = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
-        const l = e,
-            d = null === (a = e.wpcf7) || void 0 === a ? void 0 : a.schema;
-        if (void 0 === d) return;
-        if (null === (r = s.target) || void 0 === r || !r.closest(".wpcf7-form-control-wrap[data-name]")) return;
-        if (null !== (n = s.target) && void 0 !== n && n.closest(".novalidate")) return;
+        var a, n;
+        let r = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+        const {
+            target: o,
+            scope: l = e,
+            ...d
+        } = r;
+        if (void 0 === (null === (a = e.wpcf7) || void 0 === a ? void 0 : a.schema)) return;
+        const p = { ...e.wpcf7.schema
+        };
+        if (void 0 !== o) {
+            if (!e.contains(o)) return;
+            if (!o.closest(".wpcf7-form-control-wrap[data-name]")) return;
+            if (o.closest(".novalidate")) return
+        }
         const u = new FormData,
-            p = [];
+            f = [];
         for (const e of l.querySelectorAll(".wpcf7-form-control-wrap"))
             if (!e.closest(".novalidate") && (e.querySelectorAll(":where( input, textarea, select ):enabled").forEach((e => {
                     if (e.name) switch (e.type) {
@@ -103,55 +111,60 @@
                         default:
                             u.append(e.name, e.value)
                     }
-                })), e.dataset.name && (p.push(e.dataset.name), e.setAttribute("data-under-validation", "1"), e.dataset.name === s.target.name.replace(/\[.*\]$/, "")))) break;
-        d.rules = (null !== (o = d.rules) && void 0 !== o ? o : []).filter((e => {
+                })), e.dataset.name && (f.push(e.dataset.name), e.setAttribute("data-under-validation", "1"), e.contains(o)))) break;
+        p.rules = (null !== (n = p.rules) && void 0 !== n ? n : []).filter((e => {
             let {
                 field: t
             } = e;
-            return p.includes(t)
+            return f.includes(t)
         }));
-        const f = e.getAttribute("data-status");
+        const m = e.getAttribute("data-status");
         Promise.resolve(t(e, "validating")).then((t => {
             if (void 0 !== swv) {
-                const t = swv.validate(d, u, s);
+                const t = swv.validate(p, u, r);
                 for (const [a, {
-                        error: r
-                    }] of t) i(e, a), void 0 !== r && c(e, a, r)
+                        error: n,
+                        validInputs: r
+                    }] of t) s(e, a), void 0 !== n && c(e, a, n, {
+                    scope: l
+                }), i(e, a, null != r ? r : [])
             }
         })).finally((() => {
-            t(e, f), e.querySelectorAll(".wpcf7-form-control-wrap[data-under-validation]").forEach((e => {
+            t(e, m), e.querySelectorAll(".wpcf7-form-control-wrap[data-under-validation]").forEach((e => {
                 e.removeAttribute("data-under-validation")
             }))
         }))
     }
-    r.use = e => {
-        n.unshift(e)
+    n.use = e => {
+        r.unshift(e)
     };
-    const c = (e, t, a) => {
+    const c = (e, t, a, n) => {
             var r;
-            const n = `${null===(r=e.wpcf7)||void 0===r?void 0:r.unitTag}-ve-${t}`.replaceAll(/[^0-9a-z_-]+/gi, ""),
-                o = e.querySelector(`.wpcf7-form-control-wrap[data-name="${t}"] .wpcf7-form-control`);
+            const {
+                scope: o = e,
+                ...c
+            } = null != n ? n : {}, s = `${null===(r=e.wpcf7)||void 0===r?void 0:r.unitTag}-ve-${t}`.replaceAll(/[^0-9a-z_-]+/gi, ""), i = e.querySelector(`.wpcf7-form-control-wrap[data-name="${t}"] .wpcf7-form-control`);
             (() => {
                 const t = document.createElement("li");
-                t.setAttribute("id", n), o && o.id ? t.insertAdjacentHTML("beforeend", `<a href="#${o.id}">${a}</a>`) : t.insertAdjacentText("beforeend", a), e.wpcf7.parent.querySelector(".screen-reader-response ul").appendChild(t)
-            })(), e.querySelectorAll(`.wpcf7-form-control-wrap[data-name="${t}"]`).forEach((t => {
+                t.setAttribute("id", s), i && i.id ? t.insertAdjacentHTML("beforeend", `<a href="#${i.id}">${a}</a>`) : t.insertAdjacentText("beforeend", a), e.wpcf7.parent.querySelector(".screen-reader-response ul").appendChild(t)
+            })(), o.querySelectorAll(`.wpcf7-form-control-wrap[data-name="${t}"]`).forEach((t => {
                 if ("validating" === e.getAttribute("data-status") && !t.dataset.underValidation) return;
-                const r = document.createElement("span");
-                r.classList.add("wpcf7-not-valid-tip"), r.setAttribute("aria-hidden", "true"), r.insertAdjacentText("beforeend", a), t.appendChild(r), t.querySelectorAll("[aria-invalid]").forEach((e => {
+                const n = document.createElement("span");
+                n.classList.add("wpcf7-not-valid-tip"), n.setAttribute("aria-hidden", "true"), n.insertAdjacentText("beforeend", a), t.appendChild(n), t.querySelectorAll("[aria-invalid]").forEach((e => {
                     e.setAttribute("aria-invalid", "true")
                 })), t.querySelectorAll(".wpcf7-form-control").forEach((e => {
-                    e.classList.add("wpcf7-not-valid"), e.setAttribute("aria-describedby", n), "function" == typeof e.setCustomValidity && e.setCustomValidity(a), e.closest(".use-floating-validation-tip") && (e.addEventListener("focus", (e => {
-                        r.setAttribute("style", "display: none")
-                    })), r.addEventListener("click", (e => {
-                        r.setAttribute("style", "display: none")
+                    e.classList.add("wpcf7-not-valid"), e.setAttribute("aria-describedby", s), "function" == typeof e.setCustomValidity && e.setCustomValidity(a), e.closest(".use-floating-validation-tip") && (e.addEventListener("focus", (e => {
+                        n.setAttribute("style", "display: none")
+                    })), n.addEventListener("click", (e => {
+                        n.setAttribute("style", "display: none")
                     })))
                 }))
             }))
         },
-        i = (e, t) => {
-            var a, r;
-            const n = `${null===(a=e.wpcf7)||void 0===a?void 0:a.unitTag}-ve-${t}`.replaceAll(/[^0-9a-z_-]+/gi, "");
-            null === (r = e.wpcf7.parent.querySelector(`.screen-reader-response ul li#${n}`)) || void 0 === r || r.remove(), e.querySelectorAll(`.wpcf7-form-control-wrap[data-name="${t}"]`).forEach((e => {
+        s = (e, t) => {
+            var a, n;
+            const r = `${null===(a=e.wpcf7)||void 0===a?void 0:a.unitTag}-ve-${t}`.replaceAll(/[^0-9a-z_-]+/gi, "");
+            null === (n = e.wpcf7.parent.querySelector(`.screen-reader-response ul li#${r}`)) || void 0 === n || n.remove(), e.querySelectorAll(`.wpcf7-form-control-wrap[data-name="${t}"]`).forEach((e => {
                 var t;
                 null === (t = e.querySelector(".wpcf7-not-valid-tip")) || void 0 === t || t.remove(), e.querySelectorAll("[aria-invalid]").forEach((e => {
                     e.setAttribute("aria-invalid", "false")
@@ -159,14 +172,23 @@
                     e.removeAttribute("aria-describedby"), e.classList.remove("wpcf7-not-valid"), "function" == typeof e.setCustomValidity && e.setCustomValidity("")
                 }))
             }))
+        },
+        i = (e, t, a) => {
+            e.querySelectorAll(`[data-reflection-of="${t}"]`).forEach((e => {
+                e.innerHTML = "", a.forEach((a => {
+                    a instanceof File && (a = a.name);
+                    const n = document.createElement("output");
+                    n.setAttribute("name", t), n.insertAdjacentText("beforeend", a), e.appendChild(n)
+                }))
+            }))
         };
 
-    function s(e) {
-        let n = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
-        if (wpcf7.blocked) return l(e), void t(e, "submitting");
+    function l(e) {
+        let r = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+        if (wpcf7.blocked) return d(e), void t(e, "submitting");
         const o = new FormData(e);
-        n.submitter && n.submitter.name && o.append(n.submitter.name, n.submitter.value);
-        const i = {
+        r.submitter && r.submitter.name && o.append(r.submitter.name, r.submitter.value);
+        const s = {
             contactFormId: e.wpcf7.id,
             pluginVersion: e.wpcf7.pluginVersion,
             contactFormLocale: e.wpcf7.locale,
@@ -183,18 +205,18 @@
             })).filter((e => !1 !== e)),
             formData: o
         };
-        r({
+        n({
             endpoint: `contact-forms/${e.wpcf7.id}/feedback`,
             method: "POST",
             body: o,
             wpcf7: {
                 endpoint: "feedback",
                 form: e,
-                detail: i
+                detail: s
             }
-        }).then((r => {
-            const n = t(e, r.status);
-            return i.status = r.status, i.apiResponse = r, ["invalid", "unaccepted", "spam", "aborted"].includes(n) ? a(e, n, i) : ["sent", "failed"].includes(n) && a(e, `mail${n}`, i), a(e, "submit", i), r
+        }).then((n => {
+            const r = t(e, n.status);
+            return s.status = n.status, s.apiResponse = n, ["invalid", "unaccepted", "spam", "aborted"].includes(r) ? a(e, r, s) : ["sent", "failed"].includes(r) && a(e, `mail${r}`, s), a(e, "submit", s), n
         })).then((t => {
             t.posted_data_hash && (e.querySelector('input[name="_wpcf7_posted_data_hash"]').value = t.posted_data_hash), "mail_sent" === t.status && (e.reset(), e.wpcf7.resetOnMailSent = !0), t.invalid_fields && t.invalid_fields.forEach((t => {
                 c(e, t.field, t.message)
@@ -203,26 +225,26 @@
             }))
         })).catch((e => console.error(e)))
     }
-    r.use(((e, r) => {
+    n.use(((e, n) => {
         if (e.wpcf7 && "feedback" === e.wpcf7.endpoint) {
             const {
-                form: r,
-                detail: n
+                form: n,
+                detail: r
             } = e.wpcf7;
-            l(r), a(r, "beforesubmit", n), t(r, "submitting")
+            d(n), a(n, "beforesubmit", r), t(n, "submitting")
         }
-        return r(e)
+        return n(e)
     }));
-    const l = e => {
+    const d = e => {
         e.querySelectorAll(".wpcf7-form-control-wrap").forEach((t => {
-            t.dataset.name && i(e, t.dataset.name)
+            t.dataset.name && s(e, t.dataset.name)
         })), e.wpcf7.parent.querySelector('.screen-reader-response [role="status"]').innerText = "", e.querySelectorAll(".wpcf7-response-output").forEach((e => {
             e.innerText = ""
         }))
     };
 
-    function d(e) {
-        const n = new FormData(e),
+    function p(e) {
+        const r = new FormData(e),
             o = {
                 contactFormId: e.wpcf7.id,
                 pluginVersion: e.wpcf7.pluginVersion,
@@ -230,7 +252,7 @@
                 unitTag: e.wpcf7.unitTag,
                 containerPostId: e.wpcf7.containerPost,
                 status: e.wpcf7.status,
-                inputs: Array.from(n, (e => {
+                inputs: Array.from(r, (e => {
                     const t = e[0],
                         a = e[1];
                     return !t.match(/^_/) && {
@@ -238,9 +260,9 @@
                         value: a
                     }
                 })).filter((e => !1 !== e)),
-                formData: n
+                formData: r
             };
-        r({
+        n({
             endpoint: `contact-forms/${e.wpcf7.id}/refill`,
             method: "GET",
             wpcf7: {
@@ -248,45 +270,45 @@
                 form: e,
                 detail: o
             }
-        }).then((r => {
-            e.wpcf7.resetOnMailSent ? (delete e.wpcf7.resetOnMailSent, t(e, "mail_sent")) : t(e, "init"), o.apiResponse = r, a(e, "reset", o)
+        }).then((n => {
+            e.wpcf7.resetOnMailSent ? (delete e.wpcf7.resetOnMailSent, t(e, "mail_sent")) : t(e, "init"), o.apiResponse = n, a(e, "reset", o)
         })).catch((e => console.error(e)))
     }
-    r.use(((e, a) => {
+    n.use(((e, a) => {
         if (e.wpcf7 && "refill" === e.wpcf7.endpoint) {
             const {
                 form: a,
-                detail: r
+                detail: n
             } = e.wpcf7;
-            l(a), t(a, "resetting")
+            d(a), t(a, "resetting")
         }
         return a(e)
     }));
     const u = (e, t) => {
             for (const a in t) {
-                const r = t[a];
+                const n = t[a];
                 e.querySelectorAll(`input[name="${a}"]`).forEach((e => {
                     e.value = ""
                 })), e.querySelectorAll(`img.wpcf7-captcha-${a.replaceAll(":","")}`).forEach((e => {
-                    e.setAttribute("src", r)
+                    e.setAttribute("src", n)
                 }));
-                const n = /([0-9]+)\.(png|gif|jpeg)$/.exec(r);
-                n && e.querySelectorAll(`input[name="_wpcf7_captcha_challenge_${a}"]`).forEach((e => {
-                    e.value = n[1]
+                const r = /([0-9]+)\.(png|gif|jpeg)$/.exec(n);
+                r && e.querySelectorAll(`input[name="_wpcf7_captcha_challenge_${a}"]`).forEach((e => {
+                    e.value = r[1]
                 }))
             }
         },
-        p = (e, t) => {
+        f = (e, t) => {
             for (const a in t) {
-                const r = t[a][0],
-                    n = t[a][1];
+                const n = t[a][0],
+                    r = t[a][1];
                 e.querySelectorAll(`.wpcf7-form-control-wrap[data-name="${a}"]`).forEach((e => {
-                    e.querySelector(`input[name="${a}"]`).value = "", e.querySelector(".wpcf7-quiz-label").textContent = r, e.querySelector(`input[name="_wpcf7_quiz_answer_${a}"]`).value = n
+                    e.querySelector(`input[name="${a}"]`).value = "", e.querySelector(".wpcf7-quiz-label").textContent = n, e.querySelector(`input[name="_wpcf7_quiz_answer_${a}"]`).value = r
                 }))
             }
         };
 
-    function f(t) {
+    function m(t) {
         const a = new FormData(t);
         t.wpcf7 = {
             id: e(a.get("_wpcf7")),
@@ -296,7 +318,7 @@
             unitTag: a.get("_wpcf7_unit_tag"),
             containerPost: e(a.get("_wpcf7_container_post")),
             parent: t.closest(".wpcf7"),
-            schema: {}
+            schema: void 0
         }, t.querySelectorAll(".has-spinner").forEach((e => {
             e.insertAdjacentHTML("afterend", '<span class="wpcf7-spinner"></span>')
         })), (e => {
@@ -311,9 +333,9 @@
         })(t), (e => {
             e.querySelectorAll(".has-free-text").forEach((t => {
                 const a = t.querySelector("input.wpcf7-free-text"),
-                    r = t.querySelector('input[type="checkbox"], input[type="radio"]');
-                a.disabled = !r.checked, e.addEventListener("change", (e => {
-                    a.disabled = !r.checked, e.target === r && r.checked && a.focus()
+                    n = t.querySelector('input[type="checkbox"], input[type="radio"]');
+                a.disabled = !n.checked, e.addEventListener("change", (e => {
+                    a.disabled = !n.checked, e.target === n && n.checked && a.focus()
                 }))
             }))
         })(t), (e => {
@@ -342,28 +364,28 @@
             }))
         })(t), (t => {
             const a = (t, a) => {
-                    const r = e(t.getAttribute("data-starting-value")),
-                        n = e(t.getAttribute("data-maximum-value")),
+                    const n = e(t.getAttribute("data-starting-value")),
+                        r = e(t.getAttribute("data-maximum-value")),
                         o = e(t.getAttribute("data-minimum-value")),
-                        c = t.classList.contains("down") ? r - a.value.length : a.value.length;
-                    t.setAttribute("data-current-value", c), t.innerText = c, n && n < a.value.length ? t.classList.add("too-long") : t.classList.remove("too-long"), o && a.value.length < o ? t.classList.add("too-short") : t.classList.remove("too-short")
+                        c = t.classList.contains("down") ? n - a.value.length : a.value.length;
+                    t.setAttribute("data-current-value", c), t.innerText = c, r && r < a.value.length ? t.classList.add("too-long") : t.classList.remove("too-long"), o && a.value.length < o ? t.classList.add("too-short") : t.classList.remove("too-short")
                 },
-                r = e => {
+                n = e => {
                     e = {
                         init: !1,
                         ...e
-                    }, t.querySelectorAll(".wpcf7-character-count").forEach((r => {
-                        const n = r.getAttribute("data-target-name"),
-                            o = t.querySelector(`[name="${n}"]`);
-                        o && (o.value = o.defaultValue, a(r, o), e.init && o.addEventListener("keyup", (e => {
-                            a(r, o)
+                    }, t.querySelectorAll(".wpcf7-character-count").forEach((n => {
+                        const r = n.getAttribute("data-target-name"),
+                            o = t.querySelector(`[name="${r}"]`);
+                        o && (o.value = o.defaultValue, a(n, o), e.init && o.addEventListener("keyup", (e => {
+                            a(n, o)
                         })))
                     }))
                 };
-            r({
+            n({
                 init: !0
             }), t.addEventListener("wpcf7reset", (e => {
-                r()
+                n()
             }))
         })(t), window.addEventListener("load", (e => {
             wpcf7.cached && t.reset()
@@ -374,10 +396,10 @@
                 submitter: e.submitter
             }), e.preventDefault()
         })), t.addEventListener("wpcf7submit", (e => {
-            e.detail.apiResponse.captcha && u(t, e.detail.apiResponse.captcha), e.detail.apiResponse.quiz && p(t, e.detail.apiResponse.quiz)
+            e.detail.apiResponse.captcha && u(t, e.detail.apiResponse.captcha), e.detail.apiResponse.quiz && f(t, e.detail.apiResponse.quiz)
         })), t.addEventListener("wpcf7reset", (e => {
-            e.detail.apiResponse.captcha && u(t, e.detail.apiResponse.captcha), e.detail.apiResponse.quiz && p(t, e.detail.apiResponse.quiz)
-        })), r({
+            e.detail.apiResponse.captcha && u(t, e.detail.apiResponse.captcha), e.detail.apiResponse.quiz && f(t, e.detail.apiResponse.quiz)
+        })), n({
             endpoint: `contact-forms/${t.wpcf7.id}/feedback/schema`,
             method: "GET"
         }).then((e => {
@@ -390,17 +412,14 @@
     }
     document.addEventListener("DOMContentLoaded", (e => {
         var t;
-        if ("undefined" == typeof wpcf7) return void console.error("wpcf7 is not defined.");
-        if (void 0 === wpcf7.api) return void console.error("wpcf7.api is not defined.");
-        if ("function" != typeof window.fetch) return void console.error("Your browser does not support window.fetch().");
-        if ("function" != typeof window.FormData) return void console.error("Your browser does not support window.FormData().");
-        const a = document.querySelectorAll(".wpcf7 > form");
-        "function" == typeof a.forEach ? (wpcf7 = {
-            init: f,
-            submit: s,
-            reset: d,
+        "undefined" != typeof wpcf7 ? void 0 !== wpcf7.api ? "function" == typeof window.fetch ? "function" == typeof window.FormData ? "function" == typeof NodeList.prototype.forEach ? "function" == typeof String.prototype.replaceAll ? (wpcf7 = {
+            init: m,
+            submit: l,
+            reset: p,
             validate: o,
             ...null !== (t = wpcf7) && void 0 !== t ? t : {}
-        }, a.forEach((e => wpcf7.init(e)))) : console.error("Your browser does not support NodeList.forEach().")
+        }, document.querySelectorAll(".wpcf7 > form").forEach((e => {
+            wpcf7.init(e), e.closest(".wpcf7").classList.replace("no-js", "js")
+        }))) : console.error("Your browser does not support String.replaceAll().") : console.error("Your browser does not support NodeList.forEach().") : console.error("Your browser does not support window.FormData().") : console.error("Your browser does not support window.fetch().") : console.error("wpcf7.api is not defined.") : console.error("wpcf7 is not defined.")
     }))
-})();
+}();
